@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>フィールドレコーディング | 狸の夜業</title>
+
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/pannellum.css">
+<script src="../js/pannellum.js"></script>
+
+<style>
+
+.record-card{
+    display:flex;
+    align-items:center;
+    gap:24px;
+    background:#ffffff;
+    padding:20px;
+    margin-bottom:24px;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.12);
+    transition:.2s;
+}
+
+.record-card:hover{
+    transform:translateY(-3px);
+}
+
+.thumbnail{
+    width:220px;
+    height:140px;
+    object-fit:cover;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.record-info{
+    flex:1;
+}
+
+.record-no{
+    color:#8d6f44;
+    font-size:15px;
+    margin-bottom:10px;
+}
+
+.record-title{
+    font-size:28px;
+    color:#333;
+}
+
+/* ---------- モーダル ---------- */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.8);
+    z-index:1000;
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content{
+    width:min(90vw,1000px);
+    height:min(80vh,700px);
+    background:#000;
+
+    display:flex;
+    flex-direction:column;
+}
+
+#panoramaViewer{
+    flex:1;
+    width:100%;
+}
+
+.audio-player{
+
+background:#222;
+
+padding:16px;
+
+text-align:center;
+
+}
+
+.audio-player audio{
+
+width:95%;
+
+max-width:900px;
+
+}
+
+.close{
+    position:absolute;
+    top:10px;
+    right:18px;
+    color:white;
+    font-size:40px;
+    cursor:pointer;
+    z-index:1001;
+    user-select:none;
+}
+
+@media (max-width:700px){
+
+.record-card{
+    flex-direction:column;
+    align-items:flex-start;
+}
+
+.thumbnail{
+    width:100%;
+    height:auto;
+}
+
+.modal-content{
+    width:95vw;
+    height:70vh;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>ロケハン記録</h1>
+
+<p class="tagline">
+外で録った音と写真の置き場所
+</p>
+
+<div class="record-card">
+
+    <img
+    src="../images/higurashi_TN.jpg"
+    class="thumbnail"
+    alt="ヒグラシ"
+    onclick="openPanorama(
+    '../images/higurashi_360.jpg',
+    'audio/higurashi.mp3'
+    )">
+
+<div class="record-info">
+
+<div class="record-no">
+録音 No.001
+</div>
+
+<div class="record-title">
+ヒグラシ
+</div>
+
+</div>
+
+</div>
+
+<p>
+<a href="../index.html">← トップページへ戻る</a>
+</p>
+
+</div>
+
+<!-- モーダル -->
+
+<div id="modal" class="modal">
+
+    <div class="modal-content">
+
+        <span class="close" onclick="closePanorama()">&times;</span>
+
+        <div id="panoramaViewer"></div>
+
+        <div class="audio-player">
+            <audio id="recordAudio" controls></audio>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let viewer = null;
+
+function openPanorama(image,audio){
+
+    document.getElementById("modal").style.display="flex";
+
+    document.getElementById("recordAudio").src = audio;
+    player.load();
+    viewer = pannellum.viewer("panoramaViewer",{
+
+        type:"equirectangular",
+
+        panorama:image,
+
+        autoLoad:true,
+
+        compass:false,
+
+        mouseZoom:true
+
+    });
+
+}
+
+function closePanorama(){
+
+    document.getElementById("modal").style.display="none";
+
+    document.getElementById("recordAudio").pause();
+
+    document.getElementById("recordAudio").currentTime = 0;
+
+    document.getElementById("recordAudio").src = "";
+
+    document.getElementById("panoramaViewer").innerHTML="";
+
+    viewer=null;
+
+}
+
+document.getElementById("modal").addEventListener("click",function(e){
+
+    if(e.target===this){
+
+        closePanorama();
+
+    }
+
+});
+
+</script>
+
+</body>
+
+</html>
