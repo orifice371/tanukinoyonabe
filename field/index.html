@@ -198,8 +198,11 @@ function openPanorama(image,audio){
 
     document.getElementById("modal").style.display="flex";
 
-    document.getElementById("recordAudio").src = audio;
+    const player = document.getElementById("recordAudio");
+
+    player.src = audio;
     player.load();
+
     viewer = pannellum.viewer("panoramaViewer",{
 
         type:"equirectangular",
